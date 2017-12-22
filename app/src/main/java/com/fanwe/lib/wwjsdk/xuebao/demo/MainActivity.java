@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private Button btn_check, btn_begin, btn_front, btn_back, btn_left, btn_right, btn_catch;
 
-    private IWWControlSDKProxy mControlSDK = WWControlSDKProxy.get(); // 创建sdk对象
+    private IWWControlSDKProxy mControlSDK = new WWControlSDKProxy(); // 创建sdk对象
 
     @Override
     protected void onCreate(Bundle savedInstanceState)

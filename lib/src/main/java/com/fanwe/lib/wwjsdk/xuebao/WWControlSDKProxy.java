@@ -13,20 +13,6 @@ public final class WWControlSDKProxy implements IWWControlSDKProxy
 {
     private IWWControlSDK mControlSDK = new XueBaoWWControlSDK();
 
-    private WWControlSDKProxy()
-    {
-    }
-
-    /**
-     * 返回娃娃机控制sdk代理对象
-     *
-     * @return
-     */
-    public static IWWControlSDKProxy get()
-    {
-        return new WWControlSDKProxy();
-    }
-
     @Override
     public void init(int keepCatch)
     {
