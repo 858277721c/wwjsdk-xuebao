@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/btn_begin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginTop="50dp"
+        android:text="begin"
+        android:textAllCaps="false" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+
+        <Button
+            android:id="@+id/btn_front"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center_horizontal"
+            android:text="front"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btn_back"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:text="back"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btn_left"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:text="left"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btn_right"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:text="right"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btn_catch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="catch"
+            android:textAllCaps="false" />
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/btn_check"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        android:text="check"
+        android:textAllCaps="false" />
+
+</LinearLayout>
