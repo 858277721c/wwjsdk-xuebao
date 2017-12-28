@@ -166,12 +166,12 @@ public class XueBaoWWSerialPortDataBuilder extends WWSerialPortDataBuilder
         int total = 0;
         for (int i = 0; i < size; i++)
         {
-            byte data = list.get(i);
-            arrResult[i] = data;
+            byte item = list.get(i);
+            arrResult[i] = item;
 
             if (i >= DATA_LENGTH_INDEX && i < size - 1)
             {
-                total += data;
+                total += item;
             }
         }
 
