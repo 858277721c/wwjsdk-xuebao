@@ -21,7 +21,7 @@ public final class WWControlSDKProxy implements IWWControlSDKProxy
         if (TextUtils.isEmpty(mJsonMove))
         {
             XueBaoWWMoveParam param = new XueBaoWWMoveParam();
-            param.moveDuration = 5 * 1000;
+            param.moveDuration = 500;
 
             mJsonMove = WWJsonUtil.objectToJson(param);
         }
