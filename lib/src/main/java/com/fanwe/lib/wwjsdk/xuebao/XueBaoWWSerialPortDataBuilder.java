@@ -77,8 +77,11 @@ public class XueBaoWWSerialPortDataBuilder extends WWSerialPortDataBuilder
         }
 
         final long duration = param.moveDuration;
-        list.add((byte) (duration % 256));
-        list.add((byte) (duration / 256));
+        final long dur1 = (duration % 256);
+        final long dur2 = (duration / 256);
+
+        list.add((byte) (dur1));
+        list.add((byte) (dur2));
 
         return buildResult(list);
     }
