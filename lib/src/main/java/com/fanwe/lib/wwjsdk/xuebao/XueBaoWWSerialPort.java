@@ -124,7 +124,7 @@ public class XueBaoWWSerialPort extends WWSerialPort
      */
     private void filterData(byte[] data)
     {
-        if (checkData(data))
+        if (XueBaoWWSerialPortDataBuilder.checkData(data))
         {
             Log.i(XueBaoWWSerialPort.class.getSimpleName(), "filter data success:" + WWUtils.byte2HexString(data, data.length));
 
@@ -216,34 +216,6 @@ public class XueBaoWWSerialPort extends WWSerialPort
         {
             Log.e(XueBaoWWSerialPort.class.getSimpleName(), "filter data error:" + WWUtils.byte2HexString(data, data.length));
         }
-    }
-
-    public static boolean checkData(byte[] data)
-    {
-        if (data == null || data.length < 6)
-        {
-            return false;
-        }
-        final int start = 6;
-        final int end = data.length - 1;
-
-        int total = 0;
-        for (int i = start; i < end; i++)
-        {
-            total += (data[i] & 0xff);
-        }
-        if (total % 100 != data[end])
-        {
-            return false;
-        }
-
-        if (data[0] != (byte) (~data[3] & 0xff) ||
-                data[1] != (byte) (~data[4] & 0xff) ||
-                data[2] != (byte) (~data[5] & 0xff))
-        {
-            return false;
-        }
-        return true;
     }
 
     public static String getMacAddress()

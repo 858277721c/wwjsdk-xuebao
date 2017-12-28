@@ -1,10 +1,13 @@
 package com.fanwe.lib.wwjsdk.xuebao;
 
+import com.fanwe.lib.wwjsdk.log.WWLogger;
 import com.fanwe.lib.wwjsdk.sdk.serialport.WWSerialPortDataBuilder;
 import com.fanwe.lib.wwjsdk.utils.WWJsonUtil;
+import com.fanwe.lib.wwjsdk.utils.WWUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * 雪暴娃娃机数据转换实现类
@@ -179,6 +182,40 @@ public class XueBaoWWSerialPortDataBuilder extends WWSerialPortDataBuilder
         int last = total % 100;
         arrResult[size - 1] = (byte) last;
 
+        if (!checkData(arrResult))
+        {
+            WWLogger.get().log(Level.WARNING, "XueBaoWWSerialPortDataBuilder error:" + WWUtils.byte2HexString(arrResult, arrResult.length));
+        }
+
         return arrResult;
+    }
+
+    public static boolean checkData(byte[] data)
+    {
+        if (data == null || data.length < DATA_LENGTH_INDEX)
+        {
+            return false;
+        }
+        final int start = DATA_LENGTH_INDEX;
+        final int end = data.length - 1;
+
+        int total = 0;
+        for (int i = start; i < end; i++)
+        {
+            total += (data[i] & 0xff);
+        }
+
+        if (total % 100 != data[end])
+        {
+            return false;
+        }
+
+        if (data[0] != (byte) (~data[3] & 0xff) ||
+                data[1] != (byte) (~data[4] & 0xff) ||
+                data[2] != (byte) (~data[5] & 0xff))
+        {
+            return false;
+        }
+        return true;
     }
 }
