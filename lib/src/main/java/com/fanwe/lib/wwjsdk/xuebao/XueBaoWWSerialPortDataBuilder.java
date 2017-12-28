@@ -24,21 +24,21 @@ public class XueBaoWWSerialPortDataBuilder extends WWSerialPortDataBuilder
             param.keepCatch = getInitParam().keepCatch;
         }
 
-        List<Byte> list = buildStart(0);
+        List<Integer> list = buildStart(0);
         // 命令
-        list.add((byte) 0x31);
+        list.add(0x31);
 
-        list.add((byte) param.timeout);
-        list.add((byte) param.keepCatch);
-        list.add((byte) param.clawForceStart);
-        list.add((byte) param.clawForceTop);
-        list.add((byte) param.clawForceMove);
-        list.add((byte) param.clawForceBig);
-        list.add((byte) param.grabHeight);
-        list.add((byte) param.clawDownTime);
-        list.add((byte) param.speedFrontBack);
-        list.add((byte) param.speedLeftRight);
-        list.add((byte) param.speedUpDown);
+        list.add(param.timeout);
+        list.add(param.keepCatch);
+        list.add(param.clawForceStart);
+        list.add(param.clawForceTop);
+        list.add(param.clawForceMove);
+        list.add(param.clawForceBig);
+        list.add(param.grabHeight);
+        list.add(param.clawDownTime);
+        list.add(param.speedFrontBack);
+        list.add(param.speedLeftRight);
+        list.add(param.speedUpDown);
 
         return buildResult(list);
     }
@@ -52,24 +52,24 @@ public class XueBaoWWSerialPortDataBuilder extends WWSerialPortDataBuilder
             param = new XueBaoWWMoveParam();
         }
 
-        List<Byte> list = buildStart(0);
+        List<Integer> list = buildStart(0);
 
         // 命令
-        list.add((byte) 0x32);
+        list.add(0x32);
 
         switch (direction)
         {
             case Front:
-                list.add((byte) 0x00);
+                list.add(0x00);
                 break;
             case Back:
-                list.add((byte) 0x01);
+                list.add(0x01);
                 break;
             case Left:
-                list.add((byte) 0x02);
+                list.add(0x02);
                 break;
             case Right:
-                list.add((byte) 0x03);
+                list.add(0x03);
                 break;
             default:
 
@@ -77,11 +77,11 @@ public class XueBaoWWSerialPortDataBuilder extends WWSerialPortDataBuilder
         }
 
         final long duration = param.moveDuration;
-        final long dur1 = (duration % 256);
-        final long dur2 = (duration / 256);
+        final int dur1 = (int) (duration % 256);
+        final int dur2 = (int) (duration / 256);
 
-        list.add((byte) (dur1));
-        list.add((byte) (dur2));
+        list.add(dur1);
+        list.add(dur2);
 
         return buildResult(list);
     }
@@ -89,14 +89,14 @@ public class XueBaoWWSerialPortDataBuilder extends WWSerialPortDataBuilder
     @Override
     protected byte[] onBuildStopMove(String jsonString)
     {
-        List<Byte> list = buildStart(0);
+        List<Integer> list = buildStart(0);
 
         // 命令
-        list.add((byte) 0x32);
+        list.add(0x32);
 
-        list.add((byte) 0x05);
-        list.add((byte) 0x00);
-        list.add((byte) 0x00);
+        list.add(0x05);
+        list.add(0x00);
+        list.add(0x00);
 
         return buildResult(list);
     }
@@ -104,13 +104,13 @@ public class XueBaoWWSerialPortDataBuilder extends WWSerialPortDataBuilder
     @Override
     protected byte[] onBuildCatch(String jsonString)
     {
-        List<Byte> list = buildStart(0);
+        List<Integer> list = buildStart(0);
         // 命令
-        list.add((byte) 0x32);
+        list.add(0x32);
 
-        list.add((byte) 0x04);
-        list.add((byte) 0x00);
-        list.add((byte) 0x00);
+        list.add(0x04);
+        list.add(0x00);
+        list.add(0x00);
 
         return buildResult(list);
     }
@@ -118,30 +118,30 @@ public class XueBaoWWSerialPortDataBuilder extends WWSerialPortDataBuilder
     @Override
     protected byte[] onBuildCheck(String jsonString)
     {
-        List<Byte> list = buildStart(0);
+        List<Integer> list = buildStart(0);
 
         // 命令
-        list.add((byte) 0x34);
+        list.add(0x34);
 
         return buildResult(list);
     }
 
-    private static List<Byte> buildStart(int pid)
+    private static List<Integer> buildStart(int pid)
     {
-        byte byte0 = (byte) 0xfe;
-        byte byte1 = (byte) (pid / 255);
-        byte byte2 = (byte) (pid % 255);
+        int value0 = 0xfe;
+        int value1 = pid / 255;
+        int value2 = pid % 255;
 
-        List<Byte> list = new ArrayList<>();
-        list.add(byte0);
-        list.add(byte1);
-        list.add(byte2);
-        list.add((byte) ~byte0);
-        list.add((byte) ~byte1);
-        list.add((byte) ~byte2);
+        List<Integer> list = new ArrayList<>();
+        list.add(value0);
+        list.add(value1);
+        list.add(value2);
+        list.add(~value0);
+        list.add(~value1);
+        list.add(~value2);
 
         // 占位符，最终的值为数据的长度
-        list.add((byte) 00);
+        list.add(00);
 
         return list;
     }
@@ -152,23 +152,23 @@ public class XueBaoWWSerialPortDataBuilder extends WWSerialPortDataBuilder
      * @param list
      * @return
      */
-    private static byte[] buildResult(List<Byte> list)
+    private static byte[] buildResult(List<Integer> list)
     {
         // 占位符，最终的值为校验值
-        list.add((byte) 00);
+        list.add(00);
 
         final int size = list.size();
         // 填充占位符，最终的值为数据的长度
-        list.set(DATA_LENGTH_INDEX, (byte) size);
+        list.set(DATA_LENGTH_INDEX, size);
 
         byte[] arrResult = new byte[size];
 
         int total = 0;
         for (int i = 0; i < size; i++)
         {
-            byte item = list.get(i);
-            arrResult[i] = item;
+            final int item = list.get(i);
 
+            arrResult[i] = (byte) (item & 0xff);
             if (i >= DATA_LENGTH_INDEX && i < size - 1)
             {
                 total += item;
@@ -176,7 +176,8 @@ public class XueBaoWWSerialPortDataBuilder extends WWSerialPortDataBuilder
         }
 
         // 填充校验值
-        arrResult[size - 1] = (byte) (total % 100);
+        int last = total % 100;
+        arrResult[size - 1] = (byte) (last & 0xff);
 
         return arrResult;
     }
