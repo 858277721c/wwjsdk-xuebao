@@ -168,7 +168,7 @@ public class XueBaoWWSerialPortDataBuilder extends WWSerialPortDataBuilder
         {
             final int item = list.get(i);
 
-            arrResult[i] = (byte) (item & 0xff);
+            arrResult[i] = (byte) item;
             if (i >= DATA_LENGTH_INDEX && i < size - 1)
             {
                 total += item;
@@ -177,7 +177,7 @@ public class XueBaoWWSerialPortDataBuilder extends WWSerialPortDataBuilder
 
         // 填充校验值
         int last = total % 100;
-        arrResult[size - 1] = (byte) (last & 0xff);
+        arrResult[size - 1] = (byte) last;
 
         return arrResult;
     }
