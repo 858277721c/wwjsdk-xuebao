@@ -6,6 +6,7 @@ import com.fanwe.lib.wwjsdk.sdk.IWWControlSDK;
 import com.fanwe.lib.wwjsdk.sdk.callback.WWControlSDKCallback;
 import com.fanwe.lib.wwjsdk.sdk.proxy.IWWControlSDKProxy;
 import com.fanwe.lib.wwjsdk.sdk.request.WWInitParam;
+import com.fanwe.lib.wwjsdk.utils.FProbabilityHandler;
 import com.fanwe.lib.wwjsdk.utils.WWJsonUtil;
 
 /**
@@ -15,6 +16,7 @@ public final class WWControlSDKProxy implements IWWControlSDKProxy
 {
     private IWWControlSDK mControlSDK = new XueBaoWWControlSDK();
     private String mJsonMove;
+    private FProbabilityHandler mProbabilityHandler = new FProbabilityHandler();
 
     private String getJsonMove()
     {
@@ -42,6 +44,16 @@ public final class WWControlSDKProxy implements IWWControlSDKProxy
 
         String jsonString = WWJsonUtil.objectToJson(param);
         mControlSDK.init(jsonString);
+    }
+
+    @Override
+    public void init(int numerator, int denominator)
+    {
+        mProbabilityHandler.setNumerator(numerator);
+        mProbabilityHandler.setDenominator(denominator);
+
+        boolean keepCatch = mProbabilityHandler.random();
+        init(keepCatch ? 1 : 0);
     }
 
     @Override

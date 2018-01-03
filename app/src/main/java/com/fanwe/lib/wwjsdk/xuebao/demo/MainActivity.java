@@ -134,8 +134,9 @@ public class MainActivity extends AppCompatActivity
         {
             if (v == btn_begin)
             {
-                int keepCatch = 0; // 设置本局游戏下爪后，是否保持足够的爪力把娃娃抓起 1-保持爪力，0-不保持
-                mControlSDK.init(keepCatch);
+                int numerator = 1; // 概率分子
+                int denominator = 2; // 概率分母
+                mControlSDK.init(numerator, denominator);
 
                 mControlSDK.begin(); // 开始
             } else if (v == btn_catch)
