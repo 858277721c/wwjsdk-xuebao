@@ -12,10 +12,7 @@ import com.fanwe.lib.wwjsdk.sdk.response.WWHeartBeatData;
 import com.fanwe.lib.wwjsdk.sdk.serialport.WWSerialPort;
 import com.fanwe.lib.wwjsdk.utils.WWUtils;
 
-import java.net.NetworkInterface;
-import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -113,143 +110,108 @@ public class XueBaoWWSerialPort extends WWSerialPort
     private void onReadWWData(List<Byte> listData)
     {
         final byte[] data = WWUtils.listToArray(listData);
-        Log.e(XueBaoWWSerialPort.class.getSimpleName(), "onDataReceived:" + WWUtils.byte2HexString(data, data.length));
-        filterData(data);
+
+        Log.i(XueBaoWWSerialPort.class.getSimpleName(), "SerialPort onReadWWData:" + WWUtils.byte2HexString(data, data.length));
+
+        if (XueBaoWWSerialPortDataBuilder.checkData(data))
+        {
+            dispatchData(data);
+        } else
+        {
+            WWLogger.get().log(Level.SEVERE, "SerialPort onReadWWData error:" + WWUtils.byte2HexString(data, data.length));
+        }
     }
 
     /**
-     * 过滤数据
+     * 分发数据
      *
      * @param data
      */
-    private void filterData(byte[] data)
+    private void dispatchData(byte[] data)
     {
-        if (XueBaoWWSerialPortDataBuilder.checkData(data))
+        final int type = data[7];
+        switch (type)
         {
-            Log.i(XueBaoWWSerialPort.class.getSimpleName(), "filter data success:" + WWUtils.byte2HexString(data, data.length));
+            case DATA_CATCH_RESULT:
+                WWCatchResultData catchResultData = new WWCatchResultData();
+                catchResultData.dataOriginal = data;
 
-            final int type = data[7];
-            switch (type)
-            {
-                case DATA_CATCH_RESULT:
-                    WWCatchResultData catchResultData = new WWCatchResultData();
-                    catchResultData.dataOriginal = data;
-
-                    final int result = data[8];
-                    if (result == 1)
-                    {
-                        catchResultData.result = WWCatchResult.SUCCESS;
-                    } else
-                    {
-                        catchResultData.result = WWCatchResult.FAIL;
-                    }
-
-                    WWLogger.get().log(Level.WARNING, "receive data (catch result): " + catchResultData.result);
-                    getCallback().onDataCatchResult(catchResultData);
-                    break;
-                case DATA_CHECK_RESULT:
-                    WWCheckResultData checkResultData = new WWCheckResultData();
-                    checkResultData.dataOriginal = data;
-
-                    final int state = data[8];
-                    switch (state)
-                    {
-                        case 0:
-                            checkResultData.state = WWState.IDLE;
-                            checkResultData.stateDesc = "idle";
-                            break;
-                        case 1:
-                        case 2:
-                            checkResultData.state = WWState.OPERATING;
-                            checkResultData.stateDesc = "operating";
-                            break;
-                        case 101:
-                            checkResultData.state = WWState.ERROR;
-                            checkResultData.stateDesc = "上下电机故障或者天车未接或者上升微动故障";
-                            break;
-                        case 103:
-                            checkResultData.state = WWState.ERROR;
-                            checkResultData.stateDesc = "左右移动电机故障";
-                            break;
-                        case 104:
-                            checkResultData.state = WWState.ERROR;
-                            checkResultData.stateDesc = "前后移动电机故障或者后移微动故障";
-                            break;
-                        case 105:
-                            checkResultData.state = WWState.ERROR;
-                            checkResultData.stateDesc = "下降微动损坏或者上下电机故障";
-                            break;
-                        case 106:
-                            checkResultData.state = WWState.ERROR;
-                            checkResultData.stateDesc = "上升微动故障";
-                            break;
-                        case 108:
-                            checkResultData.state = WWState.ERROR;
-                            checkResultData.stateDesc = "前后移动电机故障或者前移";
-                            break;
-                        case 109:
-                            checkResultData.state = WWState.ERROR;
-                            checkResultData.stateDesc = "检测礼品的光眼堵住了";
-                            break;
-                        default:
-                            checkResultData.state = WWState.ERROR;
-                            checkResultData.stateDesc = "unknow error";
-                            break;
-                    }
-
-                    WWLogger.get().log(Level.INFO, "receive data (check result): " + checkResultData.state + " " + checkResultData.stateDesc);
-                    getCallback().onDataCheckResult(checkResultData);
-                    break;
-                case DATA_HEART_BEAT:
-                    WWHeartBeatData heartBeatData = new WWHeartBeatData();
-                    heartBeatData.dataOriginal = data;
-
-                    heartBeatData.mac = getMacAddress();
-
-                    WWLogger.get().log(Level.INFO, "receive data (heart beat): " + heartBeatData.mac);
-                    getCallback().onDataHeartBeat(heartBeatData);
-                    break;
-                default:
-                    break;
-            }
-        } else
-        {
-            Log.e(XueBaoWWSerialPort.class.getSimpleName(), "filter data error:" + WWUtils.byte2HexString(data, data.length));
-        }
-    }
-
-    public static String getMacAddress()
-    {
-        try
-        {
-            Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
-            while (interfaces.hasMoreElements())
-            {
-                NetworkInterface item = interfaces.nextElement();
-
-                byte[] arrAddress = item.getHardwareAddress();
-                if (arrAddress == null || arrAddress.length <= 0)
+                final int result = data[8];
+                if (result == 1)
                 {
-                    continue;
+                    catchResultData.result = WWCatchResult.SUCCESS;
                 } else
                 {
-                    StringBuilder sb = new StringBuilder();
-                    for (byte address : arrAddress)
-                    {
-                        sb.append(address).append(":");
-                    }
-                    if (sb.length() > 0)
-                    {
-                        sb.deleteCharAt(sb.length() - 1);
-                    }
-                    return sb.toString();
+                    catchResultData.result = WWCatchResult.FAIL;
                 }
-            }
-        } catch (SocketException e)
-        {
-            e.printStackTrace();
-        }
 
-        return "";
+                WWLogger.get().log(Level.WARNING, "SerialPort -----> (catch result) " + catchResultData.result);
+                getCallback().onDataCatchResult(catchResultData);
+                break;
+            case DATA_CHECK_RESULT:
+                WWCheckResultData checkResultData = new WWCheckResultData();
+                checkResultData.dataOriginal = data;
+
+                final int state = data[8];
+                switch (state)
+                {
+                    case 0:
+                        checkResultData.state = WWState.IDLE;
+                        checkResultData.stateDesc = "idle";
+                        break;
+                    case 1:
+                    case 2:
+                        checkResultData.state = WWState.OPERATING;
+                        checkResultData.stateDesc = "operating";
+                        break;
+                    case 101:
+                        checkResultData.state = WWState.ERROR;
+                        checkResultData.stateDesc = "上下电机故障或者天车未接或者上升微动故障";
+                        break;
+                    case 103:
+                        checkResultData.state = WWState.ERROR;
+                        checkResultData.stateDesc = "左右移动电机故障";
+                        break;
+                    case 104:
+                        checkResultData.state = WWState.ERROR;
+                        checkResultData.stateDesc = "前后移动电机故障或者后移微动故障";
+                        break;
+                    case 105:
+                        checkResultData.state = WWState.ERROR;
+                        checkResultData.stateDesc = "下降微动损坏或者上下电机故障";
+                        break;
+                    case 106:
+                        checkResultData.state = WWState.ERROR;
+                        checkResultData.stateDesc = "上升微动故障";
+                        break;
+                    case 108:
+                        checkResultData.state = WWState.ERROR;
+                        checkResultData.stateDesc = "前后移动电机故障或者前移";
+                        break;
+                    case 109:
+                        checkResultData.state = WWState.ERROR;
+                        checkResultData.stateDesc = "检测礼品的光眼堵住了";
+                        break;
+                    default:
+                        checkResultData.state = WWState.ERROR;
+                        checkResultData.stateDesc = "unknow error";
+                        break;
+                }
+
+                WWLogger.get().log(Level.INFO, "SerialPort -----> (check result) " + checkResultData.state + " " + checkResultData.stateDesc);
+                getCallback().onDataCheckResult(checkResultData);
+                break;
+            case DATA_HEART_BEAT:
+                WWHeartBeatData heartBeatData = new WWHeartBeatData();
+                heartBeatData.dataOriginal = data;
+
+                heartBeatData.mac = WWUtils.getMacAddress();
+
+                WWLogger.get().log(Level.INFO, "SerialPort -----> (heart beat) " + heartBeatData.mac);
+                getCallback().onDataHeartBeat(heartBeatData);
+                break;
+            default:
+                break;
+        }
     }
 }

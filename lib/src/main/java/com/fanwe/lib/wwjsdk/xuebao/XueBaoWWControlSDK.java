@@ -1,8 +1,8 @@
 package com.fanwe.lib.wwjsdk.xuebao;
 
 import com.fanwe.lib.wwjsdk.sdk.WWControlSDK;
-import com.fanwe.lib.wwjsdk.sdk.serialport.IWWSerialPortDataBuilder;
 import com.fanwe.lib.wwjsdk.sdk.serialport.WWSerialPort;
+import com.fanwe.lib.wwjsdk.sdk.serialport.WWSerialPortDataBuilder;
 
 /**
  * 雪暴娃娃机控制sdk
@@ -10,7 +10,7 @@ import com.fanwe.lib.wwjsdk.sdk.serialport.WWSerialPort;
 public class XueBaoWWControlSDK extends WWControlSDK
 {
     @Override
-    protected IWWSerialPortDataBuilder provideSerialDataBuilder()
+    protected WWSerialPortDataBuilder provideSerialDataBuilder()
     {
         return new XueBaoWWSerialPortDataBuilder();
     }

@@ -17,7 +17,7 @@ public class XueBaoWWSerialPortDataBuilder extends WWSerialPortDataBuilder
     public static final int DATA_LENGTH_INDEX = 6;
 
     @Override
-    protected byte[] onBuildBegin(String jsonString)
+    public byte[] buildBegin(String jsonString)
     {
         XueBaoWWBeginParam param = WWJsonUtil.jsonToObject(jsonString, XueBaoWWBeginParam.class);
         if (param == null)
@@ -47,7 +47,7 @@ public class XueBaoWWSerialPortDataBuilder extends WWSerialPortDataBuilder
     }
 
     @Override
-    protected byte[] onBuildMove(String jsonString, Direction direction)
+    public byte[] buildMove(String jsonString, Direction direction)
     {
         XueBaoWWMoveParam param = WWJsonUtil.jsonToObject(jsonString, XueBaoWWMoveParam.class);
         if (param == null)
@@ -90,7 +90,7 @@ public class XueBaoWWSerialPortDataBuilder extends WWSerialPortDataBuilder
     }
 
     @Override
-    protected byte[] onBuildStopMove(String jsonString)
+    public byte[] buildStopMove(String jsonString)
     {
         List<Integer> list = buildStart(0);
 
@@ -105,7 +105,7 @@ public class XueBaoWWSerialPortDataBuilder extends WWSerialPortDataBuilder
     }
 
     @Override
-    protected byte[] onBuildCatch(String jsonString)
+    public byte[] buildCatch(String jsonString)
     {
         List<Integer> list = buildStart(0);
         // 命令
@@ -119,7 +119,7 @@ public class XueBaoWWSerialPortDataBuilder extends WWSerialPortDataBuilder
     }
 
     @Override
-    protected byte[] onBuildCheck(String jsonString)
+    public byte[] buildCheck(String jsonString)
     {
         List<Integer> list = buildStart(0);
 
@@ -184,7 +184,7 @@ public class XueBaoWWSerialPortDataBuilder extends WWSerialPortDataBuilder
 
         if (!checkData(arrResult))
         {
-            WWLogger.get().log(Level.WARNING, "XueBaoWWSerialPortDataBuilder error:" + WWUtils.byte2HexString(arrResult, arrResult.length));
+            WWLogger.get().log(Level.SEVERE, "XueBaoWWSerialPortDataBuilder error:" + WWUtils.byte2HexString(arrResult, arrResult.length));
         }
 
         return arrResult;
