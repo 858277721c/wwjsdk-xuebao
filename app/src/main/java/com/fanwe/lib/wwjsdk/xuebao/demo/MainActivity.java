@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity
 
         WWSDKManager.getInstance().init(this); // 初始化娃娃sdk
 
-        mControlSDK = WWControlSDKProxy.getInstance(); // 获取sdk对象（必须在娃娃sdk初始化之后创建）
+        mControlSDK = WWControlSDKProxy.getInstance(); // 获取sdk对象（必须在娃娃sdk初始化之后）
         mControlSDK.addCallback(mCallback); // 设置回调监听
     }
 
