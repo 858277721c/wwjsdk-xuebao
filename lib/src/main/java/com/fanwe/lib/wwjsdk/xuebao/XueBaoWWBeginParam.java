@@ -23,11 +23,11 @@ public class XueBaoWWBeginParam extends WWControlParam
     /**
      * 到顶爪力(1—48)
      */
-    public int clawForceTop = 0;
+    public int clawForceTop = 1;
     /**
      * 移动爪力(1—48)
      */
-    public int clawForceMove = 0;
+    public int clawForceMove = 1;
     /**
      * 大爪力(1—48)
      */
