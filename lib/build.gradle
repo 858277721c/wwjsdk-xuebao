@@ -20,7 +20,7 @@ android {
 }
 
 dependencies {
-    compile 'com.github.zj565061763:wwjsdk:1.0.6'
+    compile 'com.github.zj565061763:wwjsdk:1.0.7'
 }
 
 // 指定编码
