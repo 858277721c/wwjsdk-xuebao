@@ -35,7 +35,7 @@ public class XueBaoWWBeginParam extends WWControlParam
     /**
      * 抓起高度(0--10)底部到顶部分成10份，爪子到达某个高度就会抓力变小
      */
-    public int grabHeight = 9;
+    public int grabHeight = 0;
     /**
      * 下线长度(10—35)爪子线放到最长的时间
      */
