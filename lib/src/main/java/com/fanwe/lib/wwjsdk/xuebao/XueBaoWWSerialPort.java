@@ -62,6 +62,11 @@ public class XueBaoWWSerialPort extends WWSerialPort
         {
             // 找到本条消息数据结束的位置
             mDataEndIndex = data - 1;
+
+            if (mDataEndIndex < DATA_LENGTH_INDEX)
+            {
+                WWLogger.get().log(Level.SEVERE, "wwj read data error: illegal data length(" + data + ")");
+            }
         }
     }
 
