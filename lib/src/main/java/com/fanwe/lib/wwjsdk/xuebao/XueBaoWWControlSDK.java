@@ -16,10 +16,10 @@ public class XueBaoWWControlSDK extends WWControlSDK
     }
 
     @Override
-    protected WWSerialPort provideSerialPort()
+    protected WWSerialPort provideSerialPort(String path, int baudRate)
     {
         WWSerialPort serialPort = new XueBaoWWSerialPort();
-        serialPort.init("/dev/ttyS1", 115200);
+        serialPort.init(path, baudRate);
         return serialPort;
     }
 }

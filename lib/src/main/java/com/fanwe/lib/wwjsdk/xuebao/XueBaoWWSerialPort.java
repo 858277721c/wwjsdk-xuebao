@@ -210,7 +210,7 @@ public class XueBaoWWSerialPort extends WWSerialPort
                 WWHeartBeatData heartBeatData = new WWHeartBeatData();
                 heartBeatData.dataOriginal = data;
 
-                heartBeatData.mac = WWUtils.getMacAddress();
+                heartBeatData.mac = WWUtils.getMacAddress(0);
 
                 WWLogger.get().log(Level.INFO, "SerialPort -----> (heart beat) " + heartBeatData.mac);
                 getCallback().onDataHeartBeat(heartBeatData);
